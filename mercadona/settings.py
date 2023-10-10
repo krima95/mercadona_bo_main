@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "products",
     "defender",
     "crispy_forms",
+    "crispy-bootstrap4"
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
