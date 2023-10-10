@@ -1,0 +1,61 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+
+    <h5> Bienvenue {{ user }} </h5>
+
+    <hr>
+
+    <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
+
+        Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+
+    </a>
+
+    <hr>
+
+    <table class="table table-light table_hover">
+
+        <thead class="table-light">
+
+            <th scope="col"> Catéguories </th>
+            <th scope="col"> Produits </th>
+            <th scope="col"> ID du produit </th>
+            <th scope="col"> Descriptions </th>
+            <th scope="col"> Prix vente </th>
+            <th scope="col"> Prix soldé </th>
+            <th scope="col"> Photos </th>
+            <th scope="col"> Date de création </th>
+            <th scope="col"> Aperçu </th>
+
+        </thead>
+
+    <tbody>
+
+        {% if products  %}
+
+            {% for p in products %}
+
+                <tr>
+                    <td> {{ p.category }}</td>
+                    <td> {{ p.product_title }}</td>
+                    <td> {{ p.id }}</td>
+                    <td> {{ p.description }}</td>
+                    <td> {{ p.price }}</td>
+                    <td> {{ p.price }}</td>
+                    <td> <img src = "/media/{{ p.image }}" width = "50" height = "50"> </td>
+                    <td> {{ p.creation_date }}</td>
+                    <td> <a class="btn btn-success btn-sm" href="{% url 'product' p.id %}"> <i class="fa fa-eye" aria-hidden="true"> </i> </a> </td>
+                </tr>
+
+            {% endfor %}
+
+
+
+
+        {% endif %}
+    </tbody>
+
+    </table>
+
+{% endblock %}

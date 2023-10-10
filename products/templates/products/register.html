@@ -1,0 +1,51 @@
+{% extends 'products/base.html' %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <body>
+
+        <div class="container bg-light shadow-md p-5 form-layout">
+
+            <h3> Créer votre compte </h3>
+
+            <hr>
+            <br>
+
+            <form method="POST" autocomplete="off">
+
+                 {% csrf_token %}
+
+                {{form.username|as_crispy_field}}
+
+                <br>
+
+                {{form.password1|as_crispy_field}}
+
+                <br>
+
+                {{form.password2|as_crispy_field}}
+
+                <br>
+
+                <button type="submit" class="btn btn-success w-100 btn-block p-2"> Enregistrer &nbsp; <i class="fa fa-user" aria-hidden="true"></i></button>
+
+            </form>
+
+            <br>
+
+            <div class="text-center form-group">
+
+                <p> Vous avez déjà un compte ? </p> <a href="{% url 'login' %}"> Se connecter </a>
+
+            </div>
+
+            <br>
+
+        </div>
+
+    </body>
+
+{% endblock %}
