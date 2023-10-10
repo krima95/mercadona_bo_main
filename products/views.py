@@ -22,9 +22,10 @@ def register(request):
         form = CreateUserForm(request.POST)
 
         if form.is_valid():
+
             form.save()
 
-            messages.success(request, "Compte créé avec succès!")
+            messages.success(request, "Compte créé avec succès !")
 
             return redirect("login")
 
@@ -145,7 +146,7 @@ def delete_product(request, pk):
 
     product.delete()
 
-    messages.success(request, "Produit suppprimé avec succès")
+    messages.success(request, "Le produit est supprimé avec succès")
 
     return redirect("dashboard")
 
