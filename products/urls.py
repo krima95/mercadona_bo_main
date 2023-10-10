@@ -1,7 +1,13 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
+from .views import ListProducts, ListPromotions
+from django.conf.urls.static import static
+from django.conf import settings
 
-# app_name = "products"
+router = DefaultRouter()
+router.register(r'products', views.ListProducts, basename = 'product')
+router.register(r'promotions', views.ListPromotions, basename = 'promotion')
 
 urlpatterns = [
     path('', views.home, name=""),  # /index.html
@@ -23,5 +29,10 @@ urlpatterns = [
     path('product/<int:pk>', views.product, name="product"),  # Afficher produit
 
     path('delete-product/<int:pk>', views.delete_product, name="delete-product"),  # Supprimer produit
+
+    # API
+
+    path('products/', ListProducts.as_view(), name='product-list'),
+    path('promotions/', ListPromotions.as_view(), name='promotion-list'),
 
 ]

@@ -1,10 +1,12 @@
-from .models import Product
+from .models import Product, Promotion
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .serializers import ProductSerializer, PromotionSerializer
+from rest_framework import generics
 
 
 # Page d'accueil
@@ -125,7 +127,7 @@ def update_product(request, pk):
     return render(request, 'products/update-product.html', context=context)
 
 
-# - Afficher un produit
+# Afficher un produit
 
 @login_required(login_url='login')
 def product(request, pk):
@@ -137,7 +139,7 @@ def product(request, pk):
     return render(request, 'products/templates/products/view-product.html', context=context)
 
 
-# - Supprimer un produit
+# Supprimer un produit
 
 @login_required(login_url='login')
 def delete_product(request, pk):
@@ -149,4 +151,14 @@ def delete_product(request, pk):
     messages.success(request, "Le produit est supprimé avec succès")
 
     return redirect("dashboard")
+
+
+# API views
+class ListProducts(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class ListPromotions(generics.ListAPIView):
+    queryset = Promotion.objects.all()
+    serializer_class = PromotionSerializer
 
