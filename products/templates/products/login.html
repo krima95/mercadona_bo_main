@@ -1,6 +1,5 @@
 {%  extends 'products/base.html' %}
 {% load crispy_forms_filters %}
-
 {%  load crispy_forms_tags %}
 
 {% block content %}
@@ -9,7 +8,7 @@
 
         <div class="container bg-light shadow-md p-5 form-layout">
 
-            <h3> Connexion </h3>
+            <h3> Se connecter </h3>
 
             <hr>
             <br>
@@ -26,9 +25,9 @@
 
                 <br>
 
-                <button type="submit" class="btn btn-success w-100 btn-block p-2">
-                    Se connecter &nbsp;
-                    <i class="fa fa-key" aria-hidden="true"></i> </button>
+                <button type="submit" class="btn btn-primary w-100 btn-block p-2">
+                    Se connecter &nbsp; <i class="fa fa-key" aria-hidden="true"></i> </button>
+
 
             </form>
 
@@ -36,13 +35,14 @@
 
             <div class="text-center">
 
-                <p> Vous n'avez pas de compte ? </p> <a href="{% url '' %}"> Créer son compte </a>
+                <p> Vous n'avez pas de compte ? </p> <a href="{% url 'register' %}"> Créer un compte </a>
 
             </div>
 
-            <br>
 
         </div>
+
+        <br>
 
     </body>
 

@@ -32,7 +32,8 @@ urlpatterns = [
 
     # API
 
-    path('products/', ListProducts.as_view(), name='product-list'),
-    path('promotions/', ListPromotions.as_view(), name='promotion-list'),
+    path('products/', ListProducts.as_view(), name='product-list'),  # API des produits
+
+    path('promotions/', ListPromotions.as_view(), name='promotion-list'), # API des promotions
 
 ]

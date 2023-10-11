@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .serializers import ProductSerializer, PromotionSerializer
 from rest_framework import generics
-
+from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
 
 # Page d'accueil
 def home(request):
@@ -37,7 +37,6 @@ def register(request):
 
 
 # Formulaire se connecter
-
 def login(request):
     form = LoginForm()
 
@@ -79,7 +78,31 @@ def dashboard(request):
 
     context = {'products': products}
 
+    # pagination par défaut
+    default_page = 1
+    page = request.GET.get('page', default_page)
+
+    # pagination
+    items_per_page = 10
+
+    paginator = Paginator(products, items_per_page)
+
+    try:
+        items_page = paginator.page(page)
+
+    except PageNotAnInteger:
+        items_page = paginator.page(default_page)
+
+    except EmptyPage:
+        items_page = paginator.page(paginator.num_pages)
+
+    context['products'] = items_page
+
+
     return render(request, 'products/dashboard.html', context=context)
+
+# Pagination
+
 
 
 # Ajouter un produit
@@ -128,7 +151,6 @@ def update_product(request, pk):
 
 
 # Afficher un produit
-
 @login_required(login_url='login')
 def product(request, pk):
 
@@ -140,7 +162,6 @@ def product(request, pk):
 
 
 # Supprimer un produit
-
 @login_required(login_url='login')
 def delete_product(request, pk):
 
