@@ -1,0 +1,35 @@
+{% extends 'products/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <body>
+        <div class="container bg-light shadow-md p-5 form-layout">
+            <h3>Produit : <strong>{{ product.product_title }}</strong></h3>
+            <hr>
+            <h4>Prix de vente : <strong>{{ product.price }}</strong></h4>
+            <hr>
+            <h6>Vous pouvez saisir une valeur pour appliquer un pourcentage de réduction</h6>
+            <hr><br>
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                {{ form.start_date|as_crispy_field }}
+                <br>
+                {{ form.end_date|as_crispy_field }}
+                <br>
+                <p id="id_discount_percentage" > {{ form.discount_percentage|as_crispy_field }} </p>
+                <br>
+                <p id="id_new_price">{{ product.sale_price }}</p>
+                <br>
+                <button type="submit" class="btn btn-primary">
+                    Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
+                </button>
+                &nbsp;
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    Annuler &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
+            </form>
+        </div>
+
+    </body>
+{% endblock %}

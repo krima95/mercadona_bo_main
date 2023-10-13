@@ -1,101 +1,83 @@
 {% extends 'products/base.html' %}
+{% load static %}
 
 {% block content %}
 
-    <h5> Bienvenue {{ user }} </h5>
-
-    <hr>
-
-    <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
-
-        Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
-
-    </a>
-
-    <hr>
-
-    <table class="table table-hover table-bordered">
-
-        <thead class="table-light">
-
-            <th scope="col"> Catéguories </th>
-            <th scope="col"> Produits </th>
-            <th scope="col"> ID du produit </th>
-            <th scope="col"> Descriptions </th>
-            <th scope="col"> Prix vente </th>
-            <th scope="col"> Prix soldé </th>
-            <th scope="col"> Photos </th>
-            <th scope="col"> Date de création </th>
-            <th scope="col"> Aperçu </th>
-
-        </thead>
-
-        <tbody >
-
-            {% if products  %}
-
-                {% for p in products %}
-
-                    <tr>
-                        <td> {{ p.category }}</td>
-                        <td> {{ p.product_title }}</td>
-                        <td> {{ p.id }}</td>
-                        <td> {{ p.description }}</td>
-                        <td> {{ p.price }}</td>
-                        <td> {{ p.price }}</td>
-                        <td> <img src = "/media/{{ p.image }}" width = "45" height = "45"> </td>
-                        <td> {{ p.creation_date }}</td>
-                        <td> <a class="btn btn-success btn-sm" href="{% url 'product' p.id %}"> <i class="fa fa-eye" aria-hidden="true"> </i> </a> </td>
-                    </tr>
-
-                {% endfor %}
-
-                {% if products.has_other_pages %}
-
-                <div class="btn-group" role="group" aria-label="Item pagination">
-
-                    {% if products.has_previous %}
-
-                        <a href="?page={{ products.previous_page_number }}" class="btn btn-outline-success">&laquo</a>
-
-                    {% endif %}
-
-                    {% for page_number in products.paginator.page_range %}
-
-                        {%  if products.number == page_number %}
-
-                            <button class="btn btn-outline-success active">
-                                <span> {{ page_number }} <span class="sr-only">(current)</span></span>
-                            </button>
-
-                            {%  else %}
-
-                                <a href="?page={{ page_number }}" class="btn btn-outline-success"> {{ page_number }}</a>
-
+    <body>
+        <div class="container">
+            <h5> Bienvenue {{ user }} </h5>
+            <hr>
+            <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
+                Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </a>
+            <hr>
+            <div class="form-group">
+                <input id="search" class="form-control" type="text" placeholder="Rechercher....">
+            </div>
+            <hr>
+            <table class="table table-hover table-bordered">
+                <thead class="table-light">
+                    <th scope="col"> Produits </th>
+                    <th scope="col"> Description </th>
+                    <th scope="col"> Prix de vente </th>
+                    <th scope="col"> Prix soldé </th>
+                    <th scope="col"> Image </th>
+                    <th scope="col"> Gérer </th>
+                    <th scope="col"> Promotion </th>
+                </thead>
+                <tbody id="table">
+                    {% if products %}
+                        {% for p in products %}
+                            <tr>
+                                <td> {{ p.product_title }}</td>
+                                <td> {{ p.description }}</td>
+                                <td> {{ p.price }}</td>
+                                <td>
+                                    {% if p.sale_price %}
+                                        {{ p.sale_price }}
+                                    {% else %}
+                                        <!-- Vide si pas de promotion -->
+                                    {% endif %}
+                                </td>
+                                <td> <img src="/media/{{ p.image }}" class="rounded mx-auto d-block img-fluid"
+                                          style="width: 55px; height: 55px"> </td>
+                                <td> <a class="btn btn-success btn-sm rounded d-block box"
+                                        href="{% url 'product' p.id %}"> <i class="fa fa-eye"
+                                                                            aria-hidden="true"> </i> </a> </td>
+                                <td> <a class="btn btn-success btn-sm rounded d-block box"
+                                        href="{% url 'promotion' p.id %}"> <i class="fa fa-percent"
+                                                                              aria-hidden="true"> </i> </a> </td>
+                            </tr>
+                        {% endfor %}
+                        {% if products.has_other_pages %}
+                        <div class="btn-group" role="group" aria-label="Item pagination">
+                            {% if products.has_previous %}
+                                <a href="?page={{ products.previous_page_number }}"
+                                   class="btn btn-outline-success">&laquo</a>
+                            {% endif %}
+                            {% for page_number in products.paginator.page_range %}
+                                {% if products.number == page_number %}
+                                    <button class="btn btn-outline-success active">
+                                        <span> {{ page_number }} <span class="sr-only">(current)</span></span>
+                                    </button>
+                                {% else %}
+                                    <a href="?page={{ page_number }}" class="btn btn-outline-success">
+                                        {{ page_number }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if products.has_next %}
+                                <a href="?page={{ products.next_page_number }}"
+                                   class="btn btn-outline-primary">&raquo;
+                                </a>
+                            {% endif %}
+                        </div>
                         {% endif %}
-
-                    {% endfor %}
-
-                     {% if products.has_next %}
-
-                        <a href="?page={{ products.next_page_number }}" class="btn btn-outline-primary">&laquo;</a>
-
                     {% endif %}
+                </tbody>
+            </table>
+        </div>
 
-
-
-                    </div>
-
-                {% endif %}
-
-            {% endif %}
-
-        </tbody>
-
-    </table>
-
-
-
-
+    </body>
 
 {% endblock %}
