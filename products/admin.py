@@ -4,7 +4,7 @@ from products.models import Category, Product, Promotion
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('category', 'product_title', 'price')
+    list_display = ('id', 'category', 'product_title', 'price')
     list_filter = ('category', 'product_title')
     search_fields = ['product_title', 'price']
     list_per_page = 10

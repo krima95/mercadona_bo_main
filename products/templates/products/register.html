@@ -15,7 +15,7 @@
 
             <form method="POST" autocomplete="off">
 
-                 {% csrf_token %}
+                {% csrf_token %}
 
                 {{form.username|as_crispy_field}}
 
@@ -29,7 +29,8 @@
 
                 <br>
 
-                <button type="submit" class="btn btn-success w-100 btn-block p-2"> Enregistrer &nbsp; <i class="fa fa-user" aria-hidden="true"></i></button>
+                <button type="submit" class="btn btn-success w-100 btn-block p-2"> Enregistrer &nbsp;
+                    <i class="fa fa-user" aria-hidden="true"></i></button>
 
             </form>
 

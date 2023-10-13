@@ -1,3 +1,8 @@
+a {
+    display: block;
+    margin : auto;
+}
+
 .form-layout {
     border-radius: 15px;
     width: 500px;
@@ -13,4 +18,41 @@
 
 .message-text {
     color: #1f2a23;
+}
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box div {
+  width: 100px;
+  height: 100px;
+}
+
+/* Personnalisation du widget de calendrier */
+.ui-datepicker {
+    background-color: #fff;
+}
+
+.ui-datepicker-header {
+    background-color: #20c997;;
+}
+
+.ui-datepicker-title {
+    color: #fff;
+}
+
+.ui-datepicker-calendar {
+    border: 1px solid #ccc;
+}
+
+.ui-state-default {
+    color: #333;
+    background-color: #fff;
+}
+
+.ui-state-default:hover {
+    background-color: #20c997;;
+    color: #fff;
 }

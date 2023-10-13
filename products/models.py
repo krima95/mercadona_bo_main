@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 
@@ -20,6 +20,10 @@ class Product(models.Model):
     product_title = models.CharField(max_length=30, verbose_name="Nom du produit")
     description = models.TextField(blank=True, verbose_name="Description")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix")
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix soldé", null=True,
+                                     blank=True)
+    price_before_discount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix initial",
+                                                null=True, blank=True)
     image = models.ImageField(blank=True, upload_to='images',
                               verbose_name="Photo")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Catéguorie")
@@ -33,11 +37,14 @@ class Product(models.Model):
         return self.product_title
 
 
-# Modèle Promotion
+
 class Promotion(models.Model):
     start_date = models.DateField(verbose_name="Date de début")
-    end_date = models.DateField(blank=True,verbose_name="Date de fin")
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Pourcentage de la remise")
+    end_date = models.DateField(blank=True, verbose_name="Date de fin")
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2,
+                                              verbose_name="Pourcentage de remise",
+                                              validators=[MaxValueValidator(100)]
+                                              )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Nom du produit")
 
     class Meta:
@@ -45,4 +52,5 @@ class Promotion(models.Model):
         verbose_name_plural = "Promotions"
 
     def __str__(self):
-        return self.start_date, self.end_date, self.discount_percentage, self.product
+        return f"{self.product.product_title} - {self.discount_percentage}% off"
+

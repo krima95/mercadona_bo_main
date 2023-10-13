@@ -1,13 +1,16 @@
 from .models import Product, Promotion
-from django.shortcuts import render, redirect
-from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .serializers import ProductSerializer, PromotionSerializer
-from rest_framework import generics
-from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
+from rest_framework import viewsets
+    # generics
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Page d'accueil
 def home(request):
@@ -73,35 +76,34 @@ def user_logout(request):
 # Tableau de bord
 @login_required(login_url='login')
 def dashboard(request):
+    # Récupérez tous les produits triés par id
+    products = Product.objects.all().order_by('id')
 
-    products = Product.objects.all()
-
-    context = {'products': products}
-
-    # pagination par défaut
-    default_page = 1
-    page = request.GET.get('page', default_page)
-
-    # pagination
+    # Nombre d'articles par page
     items_per_page = 10
 
+    # Récupérez le numéro de page à partir de la requête, par défaut 1
+    page = request.GET.get('page', 1)
+
+    # Créez un objet Paginator avec les produits et le nombre d'articles par page
     paginator = Paginator(products, items_per_page)
 
     try:
+        # Récupérez les produits pour la page demandée
         items_page = paginator.page(page)
-
     except PageNotAnInteger:
-        items_page = paginator.page(default_page)
-
+        # Si le paramètre de page n'est pas un entier, affichez la première page
+        items_page = paginator.page(1)
     except EmptyPage:
+        # Si la page est hors limites, affichez la dernière page
         items_page = paginator.page(paginator.num_pages)
 
-    context['products'] = items_page
-
+    context = {
+        'products': items_page,
+    }
 
     return render(request, 'products/dashboard.html', context=context)
 
-# Pagination
 
 
 
@@ -158,7 +160,7 @@ def product(request, pk):
 
     context = {'product': all_products}
 
-    return render(request, 'products/templates/products/view-product.html', context=context)
+    return render(request, 'products/view-product.html', context=context)
 
 
 # Supprimer un produit
@@ -169,17 +171,63 @@ def delete_product(request, pk):
 
     product.delete()
 
-    messages.success(request, "Le produit est supprimé avec succès")
+    messages.success(request, "Le produit a été supprimé avec succès")
 
-    return redirect("dashboard")
+    return redirect("products/dashboard")
 
+# Ajouter une promotion
+@login_required(login_url='login')
+def promotion(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        form = PromotionForm(request.POST)
+        if form.is_valid():
+            promotion = form.save(commit=False)
+            promotion.product = product
+            promotion.save()
+
+            # Calcul du nouveau prix ici
+            initial_price = product.sale_price if product.sale_price is not None else product.price
+            discount_percentage = promotion.discount_percentage
+            new_price = initial_price - (initial_price * (discount_percentage / 100))
+
+            # Mettre à jour le champ sale_price et le champ price_before_discount du produit
+            product.sale_price = new_price
+            product.price_before_discount = initial_price
+            product.save()
+
+            return redirect('dashboard')
+    else:
+        form = PromotionForm()
+
+    return render(request, 'products/promotion.html', {'form': form, 'product': product})
+
+# Modifier une promotion
+def edit_promotion(request, promotion_id):
+    promotion = get_object_or_404(Promotion, id=promotion_id)
+    if request.method == 'POST':
+        form = PromotionForm(request.POST, instance=promotion)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = PromotionForm(instance=promotion)
+    return render(request, 'products/edit-promotion.html', {'form': form, 'promotion': promotion})
+
+# Supprimer une promotion
+def delete_promotion(request, promotion_id):
+    promotion = get_object_or_404(Promotion, id=promotion_id)
+    if request.method == 'POST':
+        promotion.delete()
+        return redirect('dashboard')
+    return render(request, 'products/delete-promotion.html', {'promotion': promotion})
 
 # API views
-class ListProducts(generics.ListAPIView):
+class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-class ListPromotions(generics.ListAPIView):
+class PromotionViewSet(viewsets.ModelViewSet):
     queryset = Promotion.objects.all()
     serializer_class = PromotionSerializer
-
