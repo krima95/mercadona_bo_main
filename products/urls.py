@@ -1,16 +1,16 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-# from .views import CategoryViewSet, ProductViewSet, PromotionViewSet
+from .views import ProductViewSet, PromotionViewSet
 from django.conf.urls.static import static
 from django.conf import settings
-"""
+
+
 # API
 router = DefaultRouter()
-router.register(r'categories', CategoryViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'promotions', PromotionViewSet)
-"""
+
 
 urlpatterns = [
     path('', views.home, name=""),  # /index.html
@@ -33,11 +33,15 @@ urlpatterns = [
 
     path('promotion/<int:product_id>', views.promotion, name="promotion"),  # Appliquer une promotion
 
+    path('edit_promotion/<int:product_id>', views.edit_promotion , name="edit-promotion"), # Modifier une promotion
+
+    path('delete_promotion/<int:product_id>', views.delete_promotion , name="delete-promotion"), # Supprimer une promotion
+
     path('delete-product/<int:pk>', views.delete_product, name="delete-product"),  # Supprimer produit
 
     # API
 
-    # path('api', include(router.urls)),  # API des produits
+    path('', include(router.urls)),  # API des produits
 
 ]
 

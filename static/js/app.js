@@ -5,17 +5,32 @@ document.addEventListener("DOMContentLoaded", function() {
             setTimeout(function() {
                 message_timeout.style.display = "none";
             }, 2000);
-        });
+});
 
 // Recherche
- $(document).ready(function(){
-    $("#search").on("keyup", function(){
-        let value = $(this).val().toLowerCase();
-        $("#table td").filter(function(){
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+$(document).ready(function () {
+    $("#search").on("input", function () {
+        let searchTerm = $(this).val().toLowerCase();
+
+        // Réinitialisez l'affichage de toutes les lignes
+        $("#table tbody tr").show();
+
+        // Parcourez chaque ligne du tableau et masquez celles qui ne correspondent pas au terme de recherche
+        $("#table tbody tr").each(function () {
+            let productTitle = $(this).find("td:eq(0)").text().toLowerCase();
+            let description = $(this).find("td:eq(1)").text().toLowerCase();
+            let price = $(this).find("td:eq(2)").text().toLowerCase();
+
+            if (!productTitle.includes(searchTerm) && !description.includes(searchTerm) && !price.includes(searchTerm)) {
+                $(this).hide();
+            }
         });
     });
 });
+
+
+
+
 
 
 // Calendrier
@@ -32,15 +47,3 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-// calculer la promotion
-function calculateSalePrice() {
-    let price = parseFloat("{{ product.price }}");
-    let discountPercentage = parseFloat(document.getElementById("id_discount_percentage").value);
-    let newPrice = price - (price * (discountPercentage / 100));
-    document.getElementById("id_new_price").textContent = newPrice.toFixed(2);
-}
-
-document.getElementById("id_discount_percentage").addEventListener("input", calculateSalePrice);
-
-// Calculate the initial sale price if the discount percentage is pre-filled
-calculateSalePrice();

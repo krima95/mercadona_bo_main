@@ -6,7 +6,7 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .serializers import CategorySerializer, ProductSerializer, PromotionSerializer
+from .serializers import ProductSerializer, PromotionSerializer
 from rest_framework import viewsets
     # generics
 
@@ -176,6 +176,7 @@ def delete_product(request, pk):
     return redirect("products/dashboard")
 
 # Ajouter une promotion
+@login_required(login_url='login')
 def promotion(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -186,12 +187,12 @@ def promotion(request, product_id):
             promotion.product = product
             promotion.save()
 
-            # Effectuez le calcul du prix avant la remise ici
+            # Calcul du nouveau prix ici
             initial_price = product.sale_price if product.sale_price is not None else product.price
             discount_percentage = promotion.discount_percentage
             new_price = initial_price - (initial_price * (discount_percentage / 100))
 
-            # Mettez à jour le champ sale_price et le champ price_before_discount du produit et enregistrez-le
+            # Mettre à jour le champ sale_price et le champ price_before_discount du produit
             product.sale_price = new_price
             product.price_before_discount = initial_price
             product.save()
@@ -202,12 +203,27 @@ def promotion(request, product_id):
 
     return render(request, 'products/promotion.html', {'form': form, 'product': product})
 
-"""
-# API views
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+# Modifier une promotion
+def edit_promotion(request, promotion_id):
+    promotion = get_object_or_404(Promotion, id=promotion_id)
+    if request.method == 'POST':
+        form = PromotionForm(request.POST, instance=promotion)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = PromotionForm(instance=promotion)
+    return render(request, 'products/edit-promotion.html', {'form': form, 'promotion': promotion})
 
+# Supprimer une promotion
+def delete_promotion(request, promotion_id):
+    promotion = get_object_or_404(Promotion, id=promotion_id)
+    if request.method == 'POST':
+        promotion.delete()
+        return redirect('dashboard')
+    return render(request, 'products/delete-promotion.html', {'promotion': promotion})
+
+# API views
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -215,4 +231,3 @@ class ProductViewSet(viewsets.ModelViewSet):
 class PromotionViewSet(viewsets.ModelViewSet):
     queryset = Promotion.objects.all()
     serializer_class = PromotionSerializer
-"""

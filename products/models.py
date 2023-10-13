@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 
@@ -41,7 +41,10 @@ class Product(models.Model):
 class Promotion(models.Model):
     start_date = models.DateField(verbose_name="Date de début")
     end_date = models.DateField(blank=True, verbose_name="Date de fin")
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Pourcentage de remise")
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2,
+                                              verbose_name="Pourcentage de remise",
+                                              validators=[MaxValueValidator(100)]
+                                              )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Nom du produit")
 
     class Meta:

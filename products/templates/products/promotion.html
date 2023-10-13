@@ -17,19 +17,17 @@
                 <br>
                 {{ form.end_date|as_crispy_field }}
                 <br>
-                <p id="id_discount_percentage" > {{ form.discount_percentage|as_crispy_field }} </p>
+                {{ form.discount_percentage|as_crispy_field }}
                 <br>
-                <p id="id_new_price">{{ product.sale_price }}</p>
+                <div class="text-center">
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-success btn-sm rounded d-block box">
+                            Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
                 <br>
-                <button type="submit" class="btn btn-primary">
-                    Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
-                </button>
-                &nbsp;
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
-                    Annuler &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                </a>
             </form>
         </div>
-
     </body>
 {% endblock %}
