@@ -29,6 +29,10 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Catéguorie")
     creation_date = models.DateTimeField(auto_now_add=True)
 
+    def has_promotion(self):
+        # Vérifie s'il y a une promotion associée à ce produit
+        return hasattr(self, 'promotion') and self.promotion is not None
+
     class Meta:
         verbose_name = "Produit"
         verbose_name_plural = "Produits"
@@ -37,14 +41,12 @@ class Product(models.Model):
         return self.product_title
 
 
-
+# Modèle Promotion
 class Promotion(models.Model):
     start_date = models.DateField(verbose_name="Date de début")
     end_date = models.DateField(blank=True, verbose_name="Date de fin")
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2,
-                                              verbose_name="Pourcentage de remise",
-                                              validators=[MaxValueValidator(100)]
-                                              )
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Pourcentage de remise",
+                                              validators=[MaxValueValidator(100)])
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Nom du produit")
 
     class Meta:
@@ -54,3 +56,17 @@ class Promotion(models.Model):
     def __str__(self):
         return f"{self.product.product_title} - {self.discount_percentage}% off"
 
+    def is_active(self):
+        today = date.today()
+        return self.start_date <= today and (self.end_date is None or self.end_date >= today)
+
+    def apply_discount(self):
+        if self.is_active():
+            # La promotion est active, donc nous appliquons la remise
+            initial_price = self.product.price  # Le prix initial
+            discount_percentage = self.discount_percentage
+            new_price = initial_price - (initial_price * (discount_percentage / 100))
+
+            # Mettre à jour le champ "price" (prix de vente) du produit
+            self.product.price = new_price
+            self.product.save()

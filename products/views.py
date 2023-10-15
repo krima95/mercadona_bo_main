@@ -1,16 +1,16 @@
 from .models import Product, Promotion
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm
+from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm, ProductFilterForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .serializers import ProductSerializer, PromotionSerializer
 from rest_framework import viewsets
-    # generics
-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# from django.db.models import Q
+from decimal import Decimal
 
 # Page d'accueil
 def home(request):
@@ -76,36 +76,25 @@ def user_logout(request):
 # Tableau de bord
 @login_required(login_url='login')
 def dashboard(request):
-    # Récupérez tous les produits triés par id
-    products = Product.objects.all().order_by('id')
+    filter_form = ProductFilterForm(request.GET)
+    products = Product.objects.all().order_by('-creation_date')
 
-    # Nombre d'articles par page
-    items_per_page = 10
+    if filter_form.is_valid():
+        category = filter_form.cleaned_data['category']
+        product_title = filter_form.cleaned_data['product_title']
 
-    # Récupérez le numéro de page à partir de la requête, par défaut 1
-    page = request.GET.get('page', 1)
+        if category:
+            products = products.filter(category=category)
 
-    # Créez un objet Paginator avec les produits et le nombre d'articles par page
-    paginator = Paginator(products, items_per_page)
-
-    try:
-        # Récupérez les produits pour la page demandée
-        items_page = paginator.page(page)
-    except PageNotAnInteger:
-        # Si le paramètre de page n'est pas un entier, affichez la première page
-        items_page = paginator.page(1)
-    except EmptyPage:
-        # Si la page est hors limites, affichez la dernière page
-        items_page = paginator.page(paginator.num_pages)
+        if product_title:
+            products = products.filter(product_title__icontains=product_title)
 
     context = {
-        'products': items_page,
+        'products': products,
+        'filter_form': filter_form,
     }
 
     return render(request, 'products/dashboard.html', context=context)
-
-
-
 
 # Ajouter un produit
 @login_required(login_url='login')
@@ -126,7 +115,6 @@ def create_product(request):
     context = {'form': form}
 
     return render(request, 'products/create-product.html', context=context)
-
 
 # Modifier un produit
 @login_required(login_url='my-login')
@@ -152,6 +140,7 @@ def update_product(request, pk):
     return render(request, 'products/update-product.html', context=context)
 
 
+
 # Afficher un produit
 @login_required(login_url='login')
 def product(request, pk):
@@ -163,7 +152,7 @@ def product(request, pk):
     return render(request, 'products/view-product.html', context=context)
 
 
-# Supprimer un produit
+## Supprimer un produit
 @login_required(login_url='login')
 def delete_product(request, pk):
 
@@ -173,7 +162,7 @@ def delete_product(request, pk):
 
     messages.success(request, "Le produit a été supprimé avec succès")
 
-    return redirect("products/dashboard")
+    return redirect("dashboard")
 
 # Ajouter une promotion
 @login_required(login_url='login')
@@ -222,6 +211,7 @@ def delete_promotion(request, promotion_id):
         promotion.delete()
         return redirect('dashboard')
     return render(request, 'products/delete-promotion.html', {'promotion': promotion})
+
 
 # API views
 class ProductViewSet(viewsets.ModelViewSet):

@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load crispy_forms_filters %}
 {% load static %}
 
 {% block content %}
@@ -13,9 +14,16 @@
 
             <hr>
 
-            <div class="form-group">
-                <input id="search" class="form-control" type="text" placeholder="Rechercher....">
-            </div>
+            <form method="get" class="form-inline" id="filter-form">
+                {% csrf_token %}
+
+                {{ filter_form.category|as_crispy_field }}
+                {{ filter_form.product_title|as_crispy_field }}
+                <br>
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                    Filtrer &nbsp;  <i class="fa fa-filter" aria-hidden="true"></i>
+                </button>
+            </form>
 
 
 
@@ -23,6 +31,7 @@
 
             <table class="table table-hover table-bordered">
                 <thead class="table-light">
+                    <th scope="col"> Catéguorie </th>
                     <th scope="col"> Produits </th>
                     <th scope="col"> Description </th>
                     <th scope="col"> Prix de vente </th>
@@ -35,6 +44,7 @@
                     {% if products %}
                         {% for p in products %}
                             <tr>
+                                <td> {{ p.category }}</td>
                                 <td> {{ p.product_title }}</td>
                                 <td> {{ p.description }}</td>
                                 <td> {{ p.price }}</td>
@@ -45,14 +55,18 @@
                                         <!-- Vide si pas de promotion -->
                                     {% endif %}
                                 </td>
-                                <td> <img src="/media/{{ p.image }}" class="rounded mx-auto d-block img-fluid"
+                                <td class="text-center">
+                                    <img src="/media/{{ p.image }}"
+                                                              class="rounded mx-auto d-block img-fluid"
                                           style="width: 55px; height: 55px"> </td>
-                                <td> <a class="btn btn-success btn-sm rounded d-block box"
-                                        href="{% url 'product' p.id %}"> <i class="fa fa-eye"
-                                                                            aria-hidden="true"> </i> </a> </td>
-                                <td> <a class="btn btn-success btn-sm rounded d-block box"
-                                        href="{% url 'promotion' p.id %}"> <i class="fa fa-percent"
-                                                                              aria-hidden="true"> </i> </a> </td>
+                                <td class="text-center" style="width: 25px; height: 55px">
+                                    <a class="btn btn-success btn-sm rounded d-block box"
+                                        href="{% url 'product' p.id %}">
+                                        <i class="fa fa-eye" aria-hidden="true"> </i> </a> </td>
+                                <td class="text-center" > <a class="btn btn-success btn-sm rounded d-block box"
+                                                             style="width: 35px; height: 35px"
+                                                             href="{% url 'promotion' p.id %}">
+                                    <i class="fa fa-percent" aria-hidden="true"> </i> </a> </td>
                             </tr>
                         {% endfor %}
                     {% endif %}

@@ -13,7 +13,7 @@ router.register(r'promotions', PromotionViewSet)
 
 
 urlpatterns = [
-    path('', views.home, name=""),  # /index.html
+    path('', views.home, name=""),  # Accueil
 
     path('register', views.register, name="register"),  # Créer un compte
 
@@ -33,15 +33,13 @@ urlpatterns = [
 
     path('promotion/<int:product_id>', views.promotion, name="promotion"),  # Appliquer une promotion
 
-    path('edit_promotion/<int:product_id>', views.edit_promotion , name="edit-promotion"), # Modifier une promotion
+    path('edit_promotion/<int:promotion_id>', views.edit_promotion , name="edit-promotion"), # Modifier une promotion
 
-    path('delete_promotion/<int:product_id>', views.delete_promotion , name="delete-promotion"), # Supprimer une promotion
+    path('delete_promotion/<int:promotion_id>', views.delete_promotion , name="delete-promotion"), # Supprimer une promotion
 
     path('delete-product/<int:pk>', views.delete_product, name="delete-product"),  # Supprimer produit
 
     # API
-
     path('', include(router.urls)),  # API des produits
-
 ]
 
