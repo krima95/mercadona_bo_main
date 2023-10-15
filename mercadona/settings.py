@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import dj_database_url
-import environ
+from decouple import config, Csv
 """
 env = environ.Env()
 environ.Env.read_env()
@@ -16,9 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "SECRET_KEY"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 
 # Application definition
 
@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "defender",
     "crispy_forms",
     "rest_framework",
+
+    'dj_database_url',
 
 
 ]
@@ -80,15 +82,7 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 # Render postgresQL Database
 
 DATABASES = {
-
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mercadona_db',
-        'USER': 'mercauser',
-        'PASSWORD': 'studi34!',
-        'HOST': 'mercadona.cv5fs1orz1ia.eu-west-3.rds.amazonaws.com' ,
-        'PORT': '5432',
-       },
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 
@@ -138,10 +132,7 @@ USE_TZ = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR /'static/']
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Static and media file configuration
+STATIC_URL = config('STATIC_URL', default='/static/')
+MEDIA_URL = config('MEDIA_URL', default='/media/')
+MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'media'))
