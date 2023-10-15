@@ -79,12 +79,8 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 # Render postgresQL Database
 
 DATABASES = 
-
-    
+   
     'default': dj_database_url.config(default=config('DATABASE_URL')),
-
-
-
 }
 
 
