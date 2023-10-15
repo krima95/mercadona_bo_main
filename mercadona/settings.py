@@ -50,6 +50,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
 
+
 ]
 
 ROOT_URLCONF = "mercadona.urls"
@@ -99,6 +100,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+"""
+# Session engine
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Session cookie age (par exemple, 1209600 seconds = 2 semaines)
+SESSION_COOKIE_AGE = 1209600
+
+SESSION_COOKIE_SECURE = True
+"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -124,5 +134,5 @@ STATICFILES_DIRS = [BASE_DIR /'static/']
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
