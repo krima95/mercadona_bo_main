@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "crispy_forms",
     "rest_framework",
 
+    'dj_database_url',
+
 
 ]
 
