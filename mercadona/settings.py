@@ -78,17 +78,12 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 
 # Render postgresQL Database
 
-DATABASES = {
-    """ 'default': dj_database_url.config(default=config('DATABASE_URL')), """
+DATABASES = 
+
     
-    'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'mercadona_db',
-            'USER': 'mercauser',
-            'PASSWORD': 'studi34!',
-            'HOST': 'mercadona.cv5fs1orz1ia.eu-west-3.rds.amazonaws.com',
-            'PORT': '5432',
-        },
+    'default': dj_database_url.config(default=config('DATABASE_URL')),
+
+
 
 }
 
