@@ -81,6 +81,7 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 DATABASES = {
 
      'default': dj_database_url.config(default=config('DATABASE_URL')),
+
 }
 
 
