@@ -12,6 +12,10 @@
                 Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
             </a>
 
+            <a class="btn btn-outline-success btn-sm" href="{% url 'create_category' %}">
+                Ajouter une catéguorie &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </a>
+
             <hr>
 
             <form method="get" class="form-inline" id="filter-form">
@@ -56,9 +60,8 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
-                                    <img src="/media/{{ p.image }}"
-                                                              class="rounded mx-auto d-block img-fluid"
-                                          style="width: 55px; height: 55px"> </td>
+                                    <img src="{{ MEDIA_URL}}{{ p.image }}"
+                                         class="rounded mx-auto d-block img-fluid" style="width:55px; height:55px"> </td>
                                 <td class="text-center" style="width: 25px; height: 55px">
                                     <a class="btn btn-success btn-sm rounded d-block box"
                                         href="{% url 'product' p.id %}">
