@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Product, Promotion
+from .models import Product, Promotion, Category
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms.widgets import PasswordInput, TextInput, ClearableFileInput
@@ -39,6 +39,13 @@ class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('product_title', 'description', 'price', 'image', 'category')
+
+
+# Formulaire ajouter une catéguorie
+class AddCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('category_title',)
 
 # Formulaire modifier un produit
 class UpdateProductForm(forms.ModelForm):

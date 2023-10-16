@@ -1,7 +1,7 @@
 from .models import Product, Promotion
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm, ProductFilterForm
+from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm, ProductFilterForm, AddCategoryForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib import messages
@@ -103,9 +103,11 @@ def create_product(request):
 
     if request.method == "POST":
 
-        form = AddProductForm(request.POST)
+        form = AddProductForm(request.POST, request.FILES)
 
         if form.is_valid():
+            image = form.save(commit=False)
+            image.uploader = request.user
             form.save()
 
             messages.success(request, "Le produit est ajouté avec succès")
@@ -115,6 +117,27 @@ def create_product(request):
     context = {'form': form}
 
     return render(request, 'products/create-product.html', context=context)
+
+
+# Ajouter une catéguorie
+@login_required(login_url='login')
+def create_category(request):
+    form = AddCategoryForm()
+
+    if request.method == "POST":
+
+        form = AddCategoryForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, "La catéguorie est ajoutée avec succès")
+
+            return redirect("dashboard")
+
+    context = {'form': form}
+
+    return render(request, 'products/create-category.html', context=context)
 
 # Modifier un produit
 @login_required(login_url='my-login')

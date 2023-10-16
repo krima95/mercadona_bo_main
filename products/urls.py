@@ -27,6 +27,8 @@ urlpatterns = [
 
     path('create_product', views.create_product, name="create_product"),  # Ajouter un produit
 
+    path('create_category', views.create_category, name="create_category"),  # Ajouter un produit
+
     path('update-product/<int:pk>', views.update_product, name="update-product"),  # Modifier produit
 
     path('product/<int:pk>', views.product, name="product"),  # Afficher produit

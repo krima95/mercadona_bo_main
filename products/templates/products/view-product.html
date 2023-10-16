@@ -13,7 +13,12 @@
                     <h3 class="card-title"> {{ product.product_title|upper}}</h3>
                     <p class="card-text"> <strong> Description </strong> {{ product.description }}</p>
                     <p class="card-text"> <strong> Prix avant promotion </strong> {{ product.price }} </p>
-                    <p id="id_new_price" class="card-text"> <strong> Prix avec promotion </strong> {{ product.sale_price }} </p>
+                    <p id="id_new_price" class="card-text"> <strong> Prix avec promotion </strong>
+                        {% if p.sale_price %}
+                                        {{ p.sale_price }}
+                                    {% else %}
+                                        Pas de promotion
+                                    {% endif %} </p>
                     <p class="card-text"> <strong> Créé le: </strong> {{ product.creation_date }} </p>
                   </div>
                 </div>
