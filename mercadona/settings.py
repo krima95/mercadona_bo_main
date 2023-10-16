@@ -79,8 +79,15 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 # Render postgresQL Database
 
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mercadona',
+        'USER': 'adminbdd',
+        'PASSWORD': 'Yannes34!',
+        'HOST': 'mercadona.cv5fs1orz1ia.eu-west-3.rds.amazonaws.com',
+        'PORT': '5432',
+    },
 
-     'default': dj_database_url.config(default=config('DATABASE_URL')),
 }
 
 
@@ -132,7 +139,6 @@ USE_TZ = True
 
 # Static and media file configuration
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
