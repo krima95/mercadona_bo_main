@@ -1,6 +1,5 @@
 {% extends 'products/base.html' %}
 {%  load static %}
-
 {% block content %}
 
         <div class=" col d-flex justify-content-center">
@@ -12,13 +11,7 @@
                   <div class="card-body">
                     <h3 class="card-title"> {{ product.product_title|upper}}</h3>
                     <p class="card-text"> <strong> Description </strong> {{ product.description }}</p>
-                    <p class="card-text"> <strong> Prix avant promotion </strong> {{ product.price }} </p>
-                    <p id="id_new_price" class="card-text"> <strong> Prix avec promotion </strong>
-                        {% if p.sale_price %}
-                                        {{ p.sale_price }}
-                                    {% else %}
-                                        Pas de promotion
-                                    {% endif %} </p>
+                    <p class="card-text"> <strong> Prix de base </strong> {{ product.price }} </p>
                     <p class="card-text"> <strong> Créé le: </strong> {{ product.creation_date }} </p>
                   </div>
                 </div>

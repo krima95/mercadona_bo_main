@@ -11,7 +11,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit
 from django.utils.safestring import mark_safe
 
-
 # Formulaire créer un user
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -39,6 +38,18 @@ class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('product_title', 'description', 'price', 'image', 'category')
+
+    image = forms.ImageField(required=False, widget=forms.ClearableFileInput)
+
+    class Meta:
+        model = Product
+        fields = ('product_title', 'description', 'price', 'image', 'category')
+
+    def __init__(self, *args, **kwargs):
+        super(AddProductForm, self).__init__(*args, **kwargs)
+
+
+
 
 
 # Formulaire ajouter une catéguorie

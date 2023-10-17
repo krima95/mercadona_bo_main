@@ -3,8 +3,6 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 
-fs = FileSystemStorage(location="/media/images")
-
 
 # Modèle Catégorie
 class Category(models.Model):
@@ -27,7 +25,7 @@ class Product(models.Model):
                                      blank=True)
     price_before_discount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix initial",
                                                 null=True, blank=True)
-    image = models.ImageField(null=True, blank=True, storage=fs, default='photo.jpg', verbose_name="Photo", )
+    image = models.ImageField(null=True, blank=True, upload_to='images/', default='photo.jpg', verbose_name="Photo", )
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Catéguorie")
     creation_date = models.DateTimeField(auto_now_add=True)
 

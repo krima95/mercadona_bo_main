@@ -56,3 +56,9 @@ a {
     background-color: #20c997;;
     color: #fff;
 }
+
+.view-button,
+.promotion-button {
+    width: 35px;
+    height: 35px;
+}

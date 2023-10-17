@@ -17,45 +17,33 @@
             <hr>
             <br>
 
-            <form method="POST" autocomplete="off">
-
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                {{form.product_title|as_crispy_field}}
-
+                {{ form.product_title|as_crispy_field }}
                 <br>
 
-                {{form.description|as_crispy_field}}
-
+                {{ form.description|as_crispy_field }}
                 <br>
 
-                {{form.image|as_crispy_field}}
-
+                {{ form.image|as_crispy_field }}
                 <br>
 
-                {{form.category|as_crispy_field}}
-
+                {{ form.category|as_crispy_field }}
                 <br>
 
-                {{form.price|as_crispy_field}}
-
+                {{ form.price|as_crispy_field }}
                 <br>
 
                 <button type="submit" class="btn btn-primary">
-
                     Ajouter un produit &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
-
                 </button>
 
                 &nbsp;
 
                 <a href="{% url 'dashboard' %}" class="btn btn-secondary">
-
-
                     Annuler &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i>
-
                 </a>
-
             </form>
 
         </div>

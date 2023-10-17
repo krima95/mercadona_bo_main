@@ -60,16 +60,24 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
-                                    <img src="{{ MEDIA_URL}}{{ p.image }}"
-                                         class="rounded mx-auto d-block img-fluid" style="width:55px; height:55px"> </td>
-                                <td class="text-center" style="width: 25px; height: 55px">
-                                    <a class="btn btn-success btn-sm rounded d-block box"
-                                        href="{% url 'product' p.id %}">
-                                        <i class="fa fa-eye" aria-hidden="true"> </i> </a> </td>
-                                <td class="text-center" > <a class="btn btn-success btn-sm rounded d-block box"
-                                                             style="width: 35px; height: 35px"
-                                                             href="{% url 'promotion' p.id %}">
-                                    <i class="fa fa-percent" aria-hidden="true"> </i> </a> </td>
+                                    {% if p.image %}
+                                        <img src="{{ p.image.url }}" alt="{{ p.product_title }}"
+                                             class="rounded mx-auto d-block img-fluid" style="width:55px; height:55px">
+                                    {% else %}
+                                        <!-- vide si pas d'image -->
+                                    {% endif %}
+                                </td>
+                                <td class="text-center" style="width: 35px; height: 55px">
+                                    <a class="btn btn-success btn-sm rounded d-block box view-button" href="{% url 'product' p.id %}">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center" style="width: 35px; height: 55px">
+                                    <a class="btn btn-success btn-sm rounded d-block box promotion-button" href="{% url 'promotion' p.id %}">
+                                        <i class="fa fa-percent" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+
                             </tr>
                         {% endfor %}
                     {% endif %}

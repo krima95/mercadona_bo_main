@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .serializers import ProductSerializer, PromotionSerializer
 from rest_framework import viewsets
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-# from django.db.models import Q
+from django.db.models import Q
 from decimal import Decimal
 
 # Page d'accueil
@@ -106,8 +106,7 @@ def create_product(request):
         form = AddProductForm(request.POST, request.FILES)
 
         if form.is_valid():
-            image = form.save(commit=False)
-            image.uploader = request.user
+
             form.save()
 
             messages.success(request, "Le produit est ajouté avec succès")
