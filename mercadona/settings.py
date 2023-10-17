@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -47,7 +47,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
-    'django.contrib.staticfiles.middleware.StaticFilesMiddleware',
+    # 'django.contrib.staticfiles.middleware.StaticFilesMiddleware',
 
 
 ]
@@ -76,11 +76,10 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Render postgresQL Database
-if 'RDS_HOSTNAME' in os.environ:
-    DATABASES = {
+# Render postgresQL Database#
+DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE':'django.db.backends.postgresql',
             'NAME': config('DB_NAME'),
             'USER': config('DB_USER'),
             'PASSWORD': config('DB_PASSWORD'),
@@ -138,13 +137,26 @@ USE_TZ = True
 
 # Static and media file configuration
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / 'static']
 
-
-# Spécifiez le répertoire racine pour les fichiers media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # URL de base pour servir des fichiers depuis MEDIA_ROOT
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+
+# SECURE_HSTS_SECONDS = 31536000
+
+# SECURE_SSL_REDIRECT = True
+
+# SESSION_COOKIE_SECURE = True
+
+# CSRF_COOKIE_SECURE = True
+
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# CURE_HSTS_PRELOAD = True
