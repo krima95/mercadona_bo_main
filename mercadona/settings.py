@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import dj_database_url
-from decouple import config, Csv
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "SECRET_KEY"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -25,13 +25,12 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
 
+    "django.contrib.staticfiles",
     "products",
     "defender",
     "crispy_forms",
     "rest_framework",
-
     'dj_database_url',
 
 
@@ -81,13 +80,12 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mercadona',
-        'USER': 'adminbdd',
-        'PASSWORD': 'Yannes34!',
-        'HOST': 'mercadona.cv5fs1orz1ia.eu-west-3.rds.amazonaws.com',
-        'PORT': '5432',
-    },
-
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+    }
 }
 
 
