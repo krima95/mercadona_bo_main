@@ -10,6 +10,7 @@
             <h6> Vous pouvez modifier votre produit içi </h6>
             <hr>
             <br>
+            <!-- Formulaire mise à jour d'un produit -->
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
                 {{ form.product_title|as_crispy_field }}
