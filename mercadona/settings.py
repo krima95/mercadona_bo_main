@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "rest_framework",
     'dj_database_url',
+    'whitenoise.runserver_nostatic',
 
 
 ]
@@ -47,7 +48,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
-    # 'django.contrib.staticfiles.middleware.StaticFilesMiddleware',
+    'django.contrib.staticfiles.middleware.StaticFilesMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 
 ]
