@@ -49,7 +49,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
-    "django.contrib.staticfiles.middleware.StaticFilesMiddleware",
+    #"django.contrib.staticfiles.middleware.StaticFilesMiddleware",
 
 
 
