@@ -6,16 +6,15 @@ from mercadona import settings
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-
-
 from django.conf import settings
 
 from django.views.static import serve
 
 urlpatterns = [
-    path("admin/defender/", include('defender.urls')),  # defender admin
+    path("admin/defender/", include("defender.urls")),  # defender admin
     path("admin/", admin.site.urls),  # admin
-    path('', include('products.urls')),  # urls app products
+    path("", include("products.urls")),  # urls app products
+    path("django-check-seo/", include("django_check_seo.urls")),  # check SEO errors
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

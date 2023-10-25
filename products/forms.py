@@ -11,17 +11,16 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit
 from django.utils.safestring import mark_safe
 
+
 # Formulaire créer un user
 class CreateUserForm(UserCreationForm):
     class Meta:
-
         model = User
         fields = ['username', 'password1', 'password2']
 
 
 # Formulaire connecter un user
 class LoginForm(AuthenticationForm):
-
     username = forms.CharField(widget=TextInput())
     password = forms.CharField(widget=PasswordInput())
 
@@ -49,14 +48,12 @@ class AddProductForm(forms.ModelForm):
         super(AddProductForm, self).__init__(*args, **kwargs)
 
 
-
-
-
 # Formulaire ajouter une catéguorie
 class AddCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ('category_title',)
+
 
 # Formulaire modifier un produit
 class UpdateProductForm(forms.ModelForm):
@@ -93,6 +90,7 @@ class PromotionForm(forms.ModelForm):
         model = Promotion
         fields = ['start_date', 'end_date', 'discount_percentage']
 
+
 # Formulaire filtres
 class ProductFilterForm(forms.ModelForm):
     class Meta:
@@ -103,4 +101,3 @@ class ProductFilterForm(forms.ModelForm):
         super(ProductFilterForm, self).__init__(*args, **kwargs)
         self.fields['category'].required = False
         self.fields['product_title'].required = False
-

@@ -23,6 +23,3 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('category_title',)
     search_fields = ['category_title']
     list_per_page = 10
-
-
-

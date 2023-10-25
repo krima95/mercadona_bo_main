@@ -5,31 +5,32 @@
 
 {% block content %}
     <body class="container">
-        <div class="bg-light shadow-md p-5 form-layout">
-            <h3>Produit : <strong>{{ product.product_title }}</strong></h3>
-            <hr>
-            <h4>Prix de vente : <strong>{{ product.price }}</strong></h4>
-            <hr>
-            <h6>Vous pouvez saisir une valeur pour appliquer un pourcentage de réduction</h6>
-            <hr><br>
-            <form method="POST" autocomplete="off">
-                {% csrf_token %}
-                {{ form.start_date|as_crispy_field }}
-                <br>
-                {{ form.end_date|as_crispy_field }}
-                <br>
-                {{ form.discount_percentage|as_crispy_field }}
-                <br>
-                <div class="text-center">
-                    <div style="text-align: center;">
-                        <button type="submit" class="btn btn-success btn-sm rounded d-block box">
-                            Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
-                        </button>
-                    </div>
+    <div class="bg-light shadow-md p-5 form-layout">
+        <h3>Produit : <strong>{{ product.product_title }}</strong></h3>
+        <hr>
+        <h4>Prix de vente : <strong>{{ product.price }}</strong></h4>
+        <hr>
+        <h6>Vous pouvez saisir une valeur pour appliquer un pourcentage de réduction</h6>
+        <hr>
+        <br>
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            {{ form.start_date|as_crispy_field }}
+            <br>
+            {{ form.end_date|as_crispy_field }}
+            <br>
+            {{ form.discount_percentage|as_crispy_field }}
+            <br>
+            <div class="text-center">
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-success btn-sm rounded d-block box">
+                        Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
+                    </button>
                 </div>
+            </div>
 
-                <br>
-            </form>
-        </div>
+            <br>
+        </form>
+    </div>
     </body>
 {% endblock %}

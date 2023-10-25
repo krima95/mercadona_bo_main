@@ -5,111 +5,114 @@
 {% block content %}
 
     <body>
-        <div class="container">
-            <h5> Bienvenue {{ user }} </h5>
-            <hr>
-            <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
-                Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            </a>
+    <div class="container">
+        <h5> Bienvenue {{ user }} </h5>
+        <hr>
+        <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
+            Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        </a>
 
-            <a class="btn btn-outline-success btn-sm" href="{% url 'create_category' %}">
-                Ajouter une catéguorie &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            </a>
+        <a class="btn btn-outline-success btn-sm" href="{% url 'create_category' %}">
+            Ajouter une catéguorie &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        </a>
 
-            <hr>
-            <!--Filtre -->
-            <form method="get" class="form-inline" id="filter-form">
-                {% csrf_token %}
+        <hr>
+        <!--Filtre -->
+        <form method="get" class="form-inline" id="filter-form">
+            {% csrf_token %}
 
-                {{ filter_form.category|as_crispy_field }}
-                {{ filter_form.product_title|as_crispy_field }}
-                <br>
-                <button type="submit" class="btn btn-outline-success btn-sm">
-                    Filtrer &nbsp;  <i class="fa fa-filter" aria-hidden="true"></i>
-                </button>
-            </form>
+            {{ filter_form.category|as_crispy_field }}
+            {{ filter_form.product_title|as_crispy_field }}
+            <br>
+            <button type="submit" class="btn btn-outline-success btn-sm">
+                Filtrer &nbsp; <i class="fa fa-filter" aria-hidden="true"></i>
+            </button>
+        </form>
 
 
+        <hr>
+        <!-- Tableau des produits -->
+        <table class="table table-hover table-bordered">
+            <thead class="table-light">
+            <th scope="col"> Catéguorie</th>
+            <th scope="col"> Produits</th>
+            <th scope="col"> Description</th>
+            <th scope="col"> Prix de vente</th>
+            <th scope="col"> Prix soldé</th>
+            <th scope="col"> Image</th>
+            <th scope="col"> Gérer</th>
+            <th scope="col"> Promotion</th>
+            </thead>
+            <tbody id="table">
+            {% if products %}
+                {% for p in products %}
+                    <tr>
+                        <td> {{ p.category }}</td>
+                        <td> {{ p.product_title }}</td>
+                        <td> {{ p.description }}</td>
+                        <td> {{ p.price }}</td>
+                        <td>
+                            {% if p.sale_price %}
+                                {{ p.sale_price }}
+                            {% else %}
+                                <!-- Vide si pas de promotion -->
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if p.image %}
+                                <img src="{{ p.image.url }}" alt="{{ p.product_title }}"
+                                     class="rounded mx-auto d-block img-fluid" style="width:55px; height:55px">
+                            {% else %}
+                                <!-- vide si pas d'image -->
+                            {% endif %}
+                        </td>
+                        <td class="text-center" style="width: 35px; height: 55px">
+                            <a class="btn btn-success btn-sm rounded d-block box view-button"
+                               href="{% url 'product' p.id %}">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                        <td class="text-center" style="width: 35px; height: 55px">
+                            <a class="btn btn-success btn-sm rounded d-block box promotion-button"
+                               href="{% url 'promotion' p.id %}">
+                                <i class="fa fa-percent" aria-hidden="true"></i>
+                            </a>
+                        </td>
 
-            <hr>
-            <!-- Tableau des produits -->
-            <table class="table table-hover table-bordered">
-                <thead class="table-light">
-                    <th scope="col"> Catéguorie </th>
-                    <th scope="col"> Produits </th>
-                    <th scope="col"> Description </th>
-                    <th scope="col"> Prix de vente </th>
-                    <th scope="col"> Prix soldé </th>
-                    <th scope="col"> Image </th>
-                    <th scope="col"> Gérer </th>
-                    <th scope="col"> Promotion </th>
-                </thead>
-                <tbody id="table">
-                    {% if products %}
-                        {% for p in products %}
-                            <tr>
-                                <td> {{ p.category }}</td>
-                                <td> {{ p.product_title }}</td>
-                                <td> {{ p.description }}</td>
-                                <td> {{ p.price }}</td>
-                                <td>
-                                    {% if p.sale_price %}
-                                        {{ p.sale_price }}
-                                    {% else %}
-                                        <!-- Vide si pas de promotion -->
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    {% if p.image %}
-                                        <img src="{{ p.image.url }}" alt="{{ p.product_title }}"
-                                             class="rounded mx-auto d-block img-fluid" style="width:55px; height:55px">
-                                    {% else %}
-                                        <!-- vide si pas d'image -->
-                                    {% endif %}
-                                </td>
-                                <td class="text-center" style="width: 35px; height: 55px">
-                                    <a class="btn btn-success btn-sm rounded d-block box view-button" href="{% url 'product' p.id %}">
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                                <td class="text-center" style="width: 35px; height: 55px">
-                                    <a class="btn btn-success btn-sm rounded d-block box promotion-button" href="{% url 'promotion' p.id %}">
-                                        <i class="fa fa-percent" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-        <!-- Pagination -->
-        <nav class="d-flex justify-content-center" aria-label="Page navigation">
-            <ul class="pagination">
-                {% if products.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ products.first_page_number }}" aria-label="Précédent">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-
-                {% for page_number in products.paginator.page_range %}
-                    <li class="page-item {% if products.number == page_number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-                    </li>
+                    </tr>
                 {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Pagination -->
+    <nav class="d-flex justify-content-center" aria-label="Page navigation">
+        <ul class="pagination">
+            {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.first_page_number }}" aria-label="Précédent">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
 
-                {% if products.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ products.paginator.num_pages }}" aria-label="Dernière page">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
+            {% for page_number in products.paginator.page_range %}
+                <li class="page-item {% if products.number == page_number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+            {% endfor %}
+
+            {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.paginator.num_pages }}" aria-label="Dernière page">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
     </body>
+
+    {{ redirect_to_login_immediately }} <!-- logout redirect -->
 
 {% endblock %}

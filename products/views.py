@@ -1,7 +1,8 @@
 from .models import Product, Promotion
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm, ProductFilterForm, AddCategoryForm
+from .forms import CreateUserForm, LoginForm, AddProductForm, UpdateProductForm, PromotionForm, ProductFilterForm, \
+    AddCategoryForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib import messages
@@ -12,9 +13,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from decimal import Decimal
 
+
 # Page d'accueil
 def home(request):
-
     return render(request, 'products/index.html')
 
 
@@ -27,7 +28,6 @@ def register(request):
         form = CreateUserForm(request.POST)
 
         if form.is_valid():
-
             form.save()
 
             messages.success(request, "Compte créé avec succès !")
@@ -96,6 +96,7 @@ def dashboard(request):
 
     return render(request, 'products/dashboard.html', context=context)
 
+
 # Ajouter un produit
 @login_required(login_url='login')
 def create_product(request):
@@ -106,7 +107,6 @@ def create_product(request):
         form = AddProductForm(request.POST, request.FILES)
 
         if form.is_valid():
-
             form.save()
 
             messages.success(request, "Le produit est ajouté avec succès")
@@ -138,10 +138,10 @@ def create_category(request):
 
     return render(request, 'products/create-category.html', context=context)
 
+
 # Modifier un produit
 @login_required(login_url='my-login')
 def update_product(request, pk):
-
     product = Product.objects.get(id=pk)
 
     form = UpdateProductForm(instance=product)
@@ -162,11 +162,9 @@ def update_product(request, pk):
     return render(request, 'products/update-product.html', context=context)
 
 
-
 # Afficher un produit
 @login_required(login_url='login')
 def product(request, pk):
-
     all_products = Product.objects.get(id=pk)
 
     context = {'product': all_products}
@@ -177,7 +175,6 @@ def product(request, pk):
 ## Supprimer un produit
 @login_required(login_url='login')
 def delete_product(request, pk):
-
     product = Product.objects.get(id=pk)
 
     product.delete()
@@ -185,6 +182,7 @@ def delete_product(request, pk):
     messages.success(request, "Le produit a été supprimé avec succès")
 
     return redirect("dashboard")
+
 
 # Ajouter une promotion
 @login_required(login_url='login')
@@ -214,6 +212,7 @@ def promotion(request, product_id):
 
     return render(request, 'products/promotion.html', {'form': form, 'product': product})
 
+
 # Modifier une promotion
 def edit_promotion(request, promotion_id):
     promotion = get_object_or_404(Promotion, id=promotion_id)
@@ -225,6 +224,7 @@ def edit_promotion(request, promotion_id):
     else:
         form = PromotionForm(instance=promotion)
     return render(request, 'products/edit-promotion.html', {'form': form, 'promotion': promotion})
+
 
 # Supprimer une promotion
 def delete_promotion(request, promotion_id):
@@ -239,6 +239,7 @@ def delete_promotion(request, promotion_id):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
 
 class PromotionViewSet(viewsets.ModelViewSet):
     queryset = Promotion.objects.all()

@@ -1,45 +1,45 @@
 {% extends 'products/base.html' %}
-{%  load static %}
+{% load static %}
 {% block content %}
 
-        <div class=" col d-flex justify-content-center">
-            <!-- Afficher les infos d'un produit et modifier / supprimer -->
-            <div class="card ">
+    <div class=" col d-flex justify-content-center">
+        <!-- Afficher les infos d'un produit et modifier / supprimer -->
+        <div class="card ">
 
-                <div class="card bg-light" style="max-width: 40rem;">
-                  <div class="card-header"> {{ product.category }} </div>
-                  <div class="card-body">
-                    <h3 class="card-title"> {{ product.product_title|upper}}</h3>
-                    <p class="card-text"> <strong> Description </strong> {{ product.description }}</p>
-                    <p class="card-text"> <strong> Prix de base </strong> {{ product.price }} </p>
-                    <p class="card-text"> <strong> Créé le: </strong> {{ product.creation_date }} </p>
-                  </div>
+            <div class="card bg-light" style="max-width: 40rem;">
+                <div class="card-header"> {{ product.category }} </div>
+                <div class="card-body">
+                    <h3 class="card-title"> {{ product.product_title|upper }}</h3>
+                    <p class="card-text"><strong> Description </strong> {{ product.description }}</p>
+                    <p class="card-text"><strong> Prix de base </strong> {{ product.price }} </p>
+                    <p class="card-text"><strong> Créé le: </strong> {{ product.creation_date }} </p>
                 </div>
+            </div>
 
-                <div>
+            <div>
 
                 <br>
 
-                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">
-                        Annuler  &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"> </i>
-                    </a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    Annuler &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"> </i>
+                </a>
 
-                    &nbsp;
+                &nbsp;
 
-                    <a href="{% url 'update-product' product.id %}" class="btn btn-info">
-                        Modifier  &nbsp; <i class="fa fa-plus" aria-hidden="true"> </i>
-                    </a>
+                <a href="{% url 'update-product' product.id %}" class="btn btn-info">
+                    Modifier &nbsp; <i class="fa fa-plus" aria-hidden="true"> </i>
+                </a>
 
-                    &nbsp;
+                &nbsp;
 
-                    <a href="{% url 'delete-product' product.id %}" class="btn btn-danger">
-                        Supprimer &nbsp;<i class="fa fa-minus-square" aria-hidden="true"> </i>
-                    </a>
-
-                </div>
+                <a href="{% url 'delete-product' product.id %}" class="btn btn-danger">
+                    Supprimer &nbsp;<i class="fa fa-minus-square" aria-hidden="true"> </i>
+                </a>
 
             </div>
 
         </div>
+
+    </div>
 
 {% endblock %}
