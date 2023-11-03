@@ -36,33 +36,12 @@
 <p class="container">
 
     <br>
-    <!-- notifications -->
-<div id="message-timer">
-    {% for message in messages %}
-
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-
-            <p id="message-timer" class="alert alert-success float-center
-                         text-center message-text container bg-light shadow-md p-1 form-layout">
-
-                <i class="fa fa-check" aria-hidden="true"></i> &nbsp; {{ message }}
-
-            </p>
-
-        {% endif %}
-
-    {% endfor %}
-
-</div>
 
 {% block content %}
 
     <!-- templates -->
 
 {% endblock %}
-
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

@@ -1,7 +1,10 @@
 import os
 from pathlib import Path
-import dj_database_url
+from dj_database_url import parse
 from decouple import config
+
+# from storages.backends.s3boto3 import S3Boto3Storage
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,7 +86,7 @@ WSGI_APPLICATION = "mercadona.wsgi.application"
 # Render postgresQL Database
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": config("DB_NAME"),
         "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASSWORD"),
@@ -134,27 +137,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+USE_S3 = os.getenv("USE_S3") == "TRUE"
 
-# URL de base pour servir des fichiers depuis MEDIA_ROOT
+if USE_S3:
+    # AWS settings
+    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_SIGNATURE_NAME = config("AWS_S3_SIGNATURE_NAME")
+    AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")
+    AWS_S3_FILE_OVERWRITE = config("AWS_S3_FILE_OVERWRITE", cast=bool)
+    AWS_DEFAULT_ACL = config("AWS_DEFAULT_ACL")
+    AWS_S3_VERITY = config("AWS_S3_VERITY")
+    DEFAULT_FILE_STORAGE = config("DEFAULT_FILE_STORAGE")
+    STATICFILES_STORAGE = config("STATICFILES_STORAGE")
+else:
+    STATIC_URL = "/staticfiles/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+
+# media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
-AWS_ACCESS_KEY_ID = "AKIAZT4LFXT2YBXSXBUH"
-AWS_SECRET_ACCESS_KEY = "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"
-AWS_STORAGE_BUCKET_NAME = "mercadonabo"
-AWS_S3_SIGNATURE_NAME = "s3v4"
-AWS_S3_REGION_NAME = "us-east-1"
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_S3_VERITY = True
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 # Django session timeout
 AUTO_LOGOUT = {
