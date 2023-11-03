@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "menus",
     "treebeard",
     "django_check_seo",
+    "drf_spectacular",
 ]
 
 SITE_ID = 1
@@ -168,3 +169,9 @@ AUTO_LOGOUT = {
     "REDIRECT_TO_LOGIN_IMMEDIATELY": True,
     "MESSAGE": "La session est expirée. Veuillez vous reconnecter.",
 }  # logout and message
+
+REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Swagger Mercadona API",
+}
