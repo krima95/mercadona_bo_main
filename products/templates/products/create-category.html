@@ -1,0 +1,52 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+    <body>
+
+    <div class="container bg-light shadow-md p-5 form-layout">
+
+        <h3> Ajouter une catéguorie </h3>
+
+        <h6> Ajouter une catéguorie içi </h6>
+
+        <hr>
+        <br>
+        <!-- Formulaire créer une catégorie -->
+        <form method="POST" autocomplete="off">
+
+            {% csrf_token %}
+
+            {{ form.category_title|as_crispy_field }}
+
+            <br>
+
+            <button type="submit" class="btn btn-primary">
+
+                Ajouter une catéguorie &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
+
+            </button>
+
+            &nbsp;
+
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+
+
+                Annuler &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i>
+
+            </a>
+
+        </form>
+
+    </div>
+
+    <br>
+
+    </body>
+
+{% endblock %}
+

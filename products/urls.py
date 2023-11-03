@@ -1,22 +1,23 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import ListProducts, ListPromotions
+from .views import ProductViewSet, PromotionViewSet
 from django.conf.urls.static import static
 from django.conf import settings
 
+# API
 router = DefaultRouter()
-router.register(r'products', views.ListProducts, basename = 'product')
-router.register(r'promotions', views.ListPromotions, basename = 'promotion')
+router.register(r'products', ProductViewSet)
+router.register(r'promotions', PromotionViewSet)
 
 urlpatterns = [
-    path('', views.home, name=""),  # /index.html
+    path('', views.home, name=""),  # Accueil
 
     path('register', views.register, name="register"),  # Créer un compte
 
     path('login', views.login, name="login"),  # Ecran de connexion
 
-    path('user-logout', views.user_logout, name="logout"), # Déconnexion
+    path('user-logout', views.user_logout, name="logout"),  # Déconnexion
 
     # CRUD
 
@@ -24,16 +25,21 @@ urlpatterns = [
 
     path('create_product', views.create_product, name="create_product"),  # Ajouter un produit
 
+    path('create_category', views.create_category, name="create_category"),  # Ajouter un produit
+
     path('update-product/<int:pk>', views.update_product, name="update-product"),  # Modifier produit
 
     path('product/<int:pk>', views.product, name="product"),  # Afficher produit
 
+    path('promotion/<int:product_id>', views.promotion, name="promotion"),  # Appliquer une promotion
+
+    path('edit_promotion/<int:promotion_id>', views.edit_promotion, name="edit-promotion"),  # Modifier une promotion
+
+    path('delete_promotion/<int:promotion_id>', views.delete_promotion, name="delete-promotion"),
+    # Supprimer une promotion
+
     path('delete-product/<int:pk>', views.delete_product, name="delete-product"),  # Supprimer produit
 
     # API
-
-    path('products/', ListProducts.as_view(), name='product-list'),  # API des produits
-
-    path('promotions/', ListPromotions.as_view(), name='promotion-list'), # API des promotions
-
+    path('', include(router.urls)),  # API des produits
 ]

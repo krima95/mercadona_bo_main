@@ -1,11 +1,13 @@
+{% load static %}
+
 {% block content %}
 
-  <h2>Produits</h2>
+    <h2>Produits</h2>
 
-  <h3>Catéguorie {{ all_products.category}}</h3>
+    <h3>Catéguorie {{ all_products.category }}</h3>
     <ul>
         {% for p in all_products %}
-            <li><a href="products/{{p.id}}">{{products.title}}</a></li>
+            <li><a href="products/{{ p.id }}">{{ products.title }}</a></li>
         {% endfor %}
     </ul>
 

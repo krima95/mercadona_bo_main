@@ -1,101 +1,118 @@
 {% extends 'products/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
 
 {% block content %}
 
-    <h5> Bienvenue {{ user }} </h5>
+    <body>
+    <div class="container">
+        <h5> Bienvenue {{ user }} </h5>
+        <hr>
+        <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
+            Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        </a>
 
-    <hr>
+        <a class="btn btn-outline-success btn-sm" href="{% url 'create_category' %}">
+            Ajouter une catéguorie &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        </a>
 
-    <a class="btn btn-outline-success btn-sm" href="{% url 'create_product' %}">
+        <hr>
+        <!--Filtre -->
+        <form method="get" class="form-inline" id="filter-form">
+            {% csrf_token %}
 
-        Ajouter un produit &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            {{ filter_form.category|as_crispy_field }}
+            {{ filter_form.product_title|as_crispy_field }}
+            <br>
+            <button type="submit" class="btn btn-outline-success btn-sm">
+                Filtrer &nbsp; <i class="fa fa-filter" aria-hidden="true"></i>
+            </button>
+        </form>
 
-    </a>
 
-    <hr>
-
-    <table class="table table-hover table-bordered">
-
-        <thead class="table-light">
-
-            <th scope="col"> Catéguories </th>
-            <th scope="col"> Produits </th>
-            <th scope="col"> ID du produit </th>
-            <th scope="col"> Descriptions </th>
-            <th scope="col"> Prix vente </th>
-            <th scope="col"> Prix soldé </th>
-            <th scope="col"> Photos </th>
-            <th scope="col"> Date de création </th>
-            <th scope="col"> Aperçu </th>
-
-        </thead>
-
-        <tbody >
-
-            {% if products  %}
-
+        <hr>
+        <!-- Tableau des produits -->
+        <table class="table table-hover table-bordered">
+            <thead class="table-light">
+            <th scope="col"> Catéguorie</th>
+            <th scope="col"> Produits</th>
+            <th scope="col"> Description</th>
+            <th scope="col"> Prix de vente</th>
+            <th scope="col"> Prix soldé</th>
+            <th scope="col"> Image</th>
+            <th scope="col"> Gérer</th>
+            <th scope="col"> Promotion</th>
+            </thead>
+            <tbody id="table">
+            {% if products %}
                 {% for p in products %}
-
                     <tr>
                         <td> {{ p.category }}</td>
                         <td> {{ p.product_title }}</td>
-                        <td> {{ p.id }}</td>
                         <td> {{ p.description }}</td>
                         <td> {{ p.price }}</td>
-                        <td> {{ p.price }}</td>
-                        <td> <img src = "/media/{{ p.image }}" width = "45" height = "45"> </td>
-                        <td> {{ p.creation_date }}</td>
-                        <td> <a class="btn btn-success btn-sm" href="{% url 'product' p.id %}"> <i class="fa fa-eye" aria-hidden="true"> </i> </a> </td>
+                        <td>
+                            {% if p.sale_price %}
+                                {{ p.sale_price }}
+                            {% else %}
+                                <!-- Vide si pas de promotion -->
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if p.image %}
+                                <img src="{{ p.image.url }}" alt="{{ p.product_title }}"
+                                     class="rounded mx-auto d-block img-fluid" style="width:55px; height:55px">
+                            {% else %}
+                                <!-- vide si pas d'image -->
+                            {% endif %}
+                        </td>
+                        <td class="text-center" style="width: 35px; height: 55px">
+                            <a class="btn btn-success btn-sm rounded d-block box view-button"
+                               href="{% url 'product' p.id %}">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                        <td class="text-center" style="width: 35px; height: 55px">
+                            <a class="btn btn-success btn-sm rounded d-block box promotion-button"
+                               href="{% url 'promotion' p.id %}">
+                                <i class="fa fa-percent" aria-hidden="true"></i>
+                            </a>
+                        </td>
+
                     </tr>
-
                 {% endfor %}
-
-                {% if products.has_other_pages %}
-
-                <div class="btn-group" role="group" aria-label="Item pagination">
-
-                    {% if products.has_previous %}
-
-                        <a href="?page={{ products.previous_page_number }}" class="btn btn-outline-success">&laquo</a>
-
-                    {% endif %}
-
-                    {% for page_number in products.paginator.page_range %}
-
-                        {%  if products.number == page_number %}
-
-                            <button class="btn btn-outline-success active">
-                                <span> {{ page_number }} <span class="sr-only">(current)</span></span>
-                            </button>
-
-                            {%  else %}
-
-                                <a href="?page={{ page_number }}" class="btn btn-outline-success"> {{ page_number }}</a>
-
-                        {% endif %}
-
-                    {% endfor %}
-
-                     {% if products.has_next %}
-
-                        <a href="?page={{ products.next_page_number }}" class="btn btn-outline-primary">&laquo;</a>
-
-                    {% endif %}
-
-
-
-                    </div>
-
-                {% endif %}
-
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Pagination -->
+    <nav class="d-flex justify-content-center" aria-label="Page navigation">
+        <ul class="pagination">
+            {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.first_page_number }}" aria-label="Précédent">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
             {% endif %}
 
-        </tbody>
+            {% for page_number in products.paginator.page_range %}
+                <li class="page-item {% if products.number == page_number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+            {% endfor %}
 
-    </table>
+            {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.paginator.num_pages }}" aria-label="Dernière page">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    </body>
 
-
-
-
+    {{ redirect_to_login_immediately }} <!-- logout redirect -->
 
 {% endblock %}

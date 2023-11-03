@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
-import dj_database_url
-import environ
+from dj_database_url import parse
+from decouple import config
 
-env = environ.Env()
-environ.Env.read_env()
+# from storages.backends.s3boto3 import S3Boto3Storage
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,12 +13,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "SECRET_KEY"
+SECRET_KEY = config("MER_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("MER_DEBUG", cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -29,18 +29,26 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "products",
     "defender",
     "crispy_forms",
     "rest_framework",
-
-
+    "dj_database_url",
+    "whitenoise.runserver_nostatic",
+    "storages",
+    "django.contrib.sites",
+    "cms",
+    "menus",
+    "treebeard",
+    "django_check_seo",
 ]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+SITE_ID = 1
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -49,7 +57,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
-
+    # "django.contrib.staticfiles.middleware.StaticFilesMiddleware",
+    "django_auto_logout.middleware.auto_logout",  # django auto logout
 ]
 
 ROOT_URLCONF = "mercadona.urls"
@@ -57,7 +66,7 @@ ROOT_URLCONF = "mercadona.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -66,6 +75,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "django_auto_logout.context_processors.auto_logout_client",  # django auto logout
             ],
         },
     },
@@ -73,13 +83,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "mercadona.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 # Render postgresQL Database
-
 DATABASES = {
-    "default": dj_database_url.parse(env('DATABASE_URL'))
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT"),
+    }
 }
 
 # Password validation
@@ -99,6 +112,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+"""
+# Session engine
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Session cookie age (par exemple, 1209600 seconds = 2 semaines)
+SESSION_COOKIE_AGE = 1209600
+
+SESSION_COOKIE_SECURE = True
+"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -115,14 +137,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
+USE_S3 = os.getenv("USE_S3") == "TRUE"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+if USE_S3:
+    # AWS settings
+    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_SIGNATURE_NAME = config("AWS_S3_SIGNATURE_NAME")
+    AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")
+    AWS_S3_FILE_OVERWRITE = config("AWS_S3_FILE_OVERWRITE", cast=bool)
+    AWS_DEFAULT_ACL = config("AWS_DEFAULT_ACL")
+    AWS_S3_VERITY = config("AWS_S3_VERITY")
+    DEFAULT_FILE_STORAGE = config("DEFAULT_FILE_STORAGE")
+    STATICFILES_STORAGE = config("STATICFILES_STORAGE")
+else:
+    STATIC_URL = "/staticfiles/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static/']
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
+# media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Django session timeout
+AUTO_LOGOUT = {
+    "IDLE_TIME": 3500,
+    "REDIRECT_TO_LOGIN_IMMEDIATELY": True,
+    "MESSAGE": "La session est expirée. Veuillez vous reconnecter.",
+}  # logout and message
