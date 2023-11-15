@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django_check_seo",
     "drf_spectacular",
     "corsheaders",
+
 ]
 
 SITE_ID = 1
@@ -178,7 +179,9 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Swagger Mercadona API",
 }
 
+
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",  # URL Angular
     "http://localhost:4200",  # Une autre URL Angular
 ]
+
