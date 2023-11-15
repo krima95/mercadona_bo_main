@@ -16,8 +16,15 @@ urlpatterns = [
     path("admin/", admin.site.urls),  # admin
     path("", include("products.urls")),  # urls app products
     path("django-check-seo/", include("django_check_seo.urls")),  # check SEO errors
+
+    path("api/schema", SpectacularAPIView.as_view(), name="schema"),  # Swagger
+    path(
+        "api/schema/docs", SpectacularSwaggerView.as_view(url_name="schema")
+    ),  # Swagger
+
     path("api/schema", SpectacularAPIView.as_view(), name="schema"),
     path("api/schema/docs", SpectacularSwaggerView.as_view(url_name="schema")),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

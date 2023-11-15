@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "treebeard",
     "django_check_seo",
     "drf_spectacular",
+    "corsheaders",
+
 ]
 
 SITE_ID = 1
@@ -58,8 +60,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
-    # "django.contrib.staticfiles.middleware.StaticFilesMiddleware",
     "django_auto_logout.middleware.auto_logout",  # django auto logout
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "mercadona.urls"
@@ -113,15 +116,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-"""
+
 # Session engine
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # Session cookie age (par exemple, 1209600 seconds = 2 semaines)
 SESSION_COOKIE_AGE = 1209600
 
 SESSION_COOKIE_SECURE = True
-"""
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -175,3 +178,10 @@ REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"}
 SPECTACULAR_SETTINGS = {
     "TITLE": "Swagger Mercadona API",
 }
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:4200",  # URL Angular
+    "http://localhost:4200",  # Une autre URL Angular
+]
+

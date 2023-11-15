@@ -16,7 +16,7 @@ from django.utils.safestring import mark_safe
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ["username", "password1", "password2"]
 
 
 # Formulaire connecter un user
@@ -29,20 +29,27 @@ class LoginForm(AuthenticationForm):
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ('product_title', 'description', 'price', 'sale_price', 'image', 'category')
+        fields = (
+            "product_title",
+            "description",
+            "price",
+            "sale_price",
+            "image",
+            "category",
+        )
 
 
 # Formulaire ajouter un produit
 class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('product_title', 'description', 'price', 'image', 'category')
+        fields = ("product_title", "description", "price", "image", "category")
 
     image = forms.ImageField(required=False, widget=forms.ClearableFileInput)
 
     class Meta:
         model = Product
-        fields = ('product_title', 'description', 'price', 'image', 'category')
+        fields = ("product_title", "description", "price", "image", "category")
 
     def __init__(self, *args, **kwargs):
         super(AddProductForm, self).__init__(*args, **kwargs)
@@ -52,52 +59,63 @@ class AddProductForm(forms.ModelForm):
 class AddCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('category_title',)
+        fields = ("category_title",)
 
 
 # Formulaire modifier un produit
 class UpdateProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('product_title', 'description', 'price', 'sale_price', 'image', 'category')
+        fields = (
+            "product_title",
+            "description",
+            "price",
+            "sale_price",
+            "image",
+            "category",
+        )
 
     def __init__(self, *args, **kwargs):
         super(UpdateProductForm, self).__init__(*args, **kwargs)
         product = self.instance
 
-        if not 'sale_price' in self.fields and product.has_promotion():
-            self.fields['sale_price'] = forms.DecimalField(
-                label='Prix soldé',
+        if not "sale_price" in self.fields and product.has_promotion():
+            self.fields["sale_price"] = forms.DecimalField(
+                label="Prix soldé",
                 required=False,
                 max_digits=10,
                 decimal_places=2,
-                initial=product.sale_price
+                initial=product.sale_price,
             )
 
         # Personnalisation de l'affichage de l'image
         if product.image:
             image_html = f'<img src="{product.image.url}" width="100" />'
-            self.fields['image'].help_text = mark_safe(image_html)
+            self.fields["image"].help_text = mark_safe(image_html)
         else:
-            self.fields['image'].help_text = 'Aucune image n\'est actuellement associée à ce produit.'
+            self.fields[
+                "image"
+            ].help_text = "Aucune image n'est actuellement associée à ce produit."
 
-        self.fields['image'].widget = ClearableFileInput(attrs={'class': 'form-control'})
+        self.fields["image"].widget = ClearableFileInput(
+            attrs={"class": "form-control"}
+        )
 
 
 # Formulaire promotion
 class PromotionForm(forms.ModelForm):
     class Meta:
         model = Promotion
-        fields = ['start_date', 'end_date', 'discount_percentage']
+        fields = ["start_date", "end_date", "discount_percentage"]
 
 
 # Formulaire filtres
 class ProductFilterForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'product_title']
+        fields = ["category", "product_title"]
 
     def __init__(self, *args, **kwargs):
         super(ProductFilterForm, self).__init__(*args, **kwargs)
-        self.fields['category'].required = False
-        self.fields['product_title'].required = False
+        self.fields["category"].required = False
+        self.fields["product_title"].required = False
