@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const apiList = document.getElementById("api-list");
 
-    // Remplacez l'URL ci-dessous par l'URL de votre API
+    // URL API
     const apiUrl = "https://127.0.0.1:8000/products";
 
     fetch(apiUrl)

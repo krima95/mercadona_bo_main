@@ -19,7 +19,7 @@ class Category(models.Model):
 # Modèle Produit
 class Product(models.Model):
     product_title = models.CharField(max_length=30, verbose_name="Nom du produit")
-    description = models.TextField(blank=True, verbose_name="Description")
+    description = models.TextField(verbose_name="Description")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix")
     sale_price = models.DecimalField(
         max_digits=10,
@@ -36,7 +36,6 @@ class Product(models.Model):
         blank=True,
     )
     image = models.ImageField(
-        null=True,
         blank=True,
         upload_to="images/",
         default="images/photo.jpg",
@@ -57,6 +56,24 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_title
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "product_title": self.product_title,
+            "description": self.description,
+            "price": str(self.price),
+            "sale_price": str(self.sale_price) if self.sale_price else None,
+            "price_before_discount": str(self.price_before_discount)
+            if self.price_before_discount
+            else None,
+            "image": str(self.image),
+            "creation_date": self.creation_date.isoformat(),
+            "category": {
+                "id": self.category.id,
+                "category_title": self.category.category_title,
+            },
+        }
 
 
 # Modèle Promotion

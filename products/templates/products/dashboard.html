@@ -67,17 +67,20 @@
                             {% endif %}
                         </td>
                         <td class="text-center" style="width: 35px; height: 55px">
-                            <a class="btn btn-success btn-sm rounded d-block box view-button"
+                            <a class="btn btn-success btn-sm rounded d-flex align-items-center box view-button"
                                href="{% url 'product' p.id %}">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                             </a>
                         </td>
+
                         <td class="text-center" style="width: 35px; height: 55px">
-                            <a class="btn btn-success btn-sm rounded d-block box promotion-button"
+                            <a class="btn btn-success btn-sm rounded d-flex align-items-center box promotion-button"
                                href="{% url 'promotion' p.id %}">
                                 <i class="fa fa-percent" aria-hidden="true"></i>
                             </a>
                         </td>
+
+
 
                     </tr>
                 {% endfor %}

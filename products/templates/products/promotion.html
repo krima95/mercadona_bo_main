@@ -3,9 +3,7 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-
     <body>
-
         <div class="container bg-light shadow-md p-5 form-layout">
             <h3>Produit : <strong>{{ product.product_title }}</strong></h3>
             <hr>
@@ -22,15 +20,15 @@
                 <br>
                 {{ form.discount_percentage|as_crispy_field }}
                 <br>
-                <div class="text-center">
-                    <div style="text-align: center;">
-                        <button type="submit" class="btn btn-success btn-sm rounded d-block box">
-                            Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
-                        </button>
-                    </div>
+                <div class="d-inline-block"> <!-- Ajoutez cette div pour rendre le bouton en ligne -->
+                    <button type="submit" class="btn btn-success btn-sm rounded box">
+                        Ajouter une promotion &nbsp; <i class="fa fa-check" aria-hidden="true"></i>
+                    </button>
                 </div>
-
-                <br>
+                &nbsp;
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm rounded">
+                    Annuler &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
             </form>
         </div>
     </body>
