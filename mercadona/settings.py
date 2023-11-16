@@ -18,7 +18,7 @@ SECRET_KEY = config("MER_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("MER_DEBUG", cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [".vercel.app"]
 
 # Application definition
 
@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "django_check_seo",
     "drf_spectacular",
     "corsheaders",
-
 ]
 
 SITE_ID = 1
@@ -141,23 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-USE_S3 = os.getenv("USE_S3") == "TRUE"
-
-if USE_S3:
-    # AWS settings
-    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
-    AWS_S3_SIGNATURE_NAME = config("AWS_S3_SIGNATURE_NAME")
-    AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")
-    AWS_S3_FILE_OVERWRITE = config("AWS_S3_FILE_OVERWRITE", cast=bool)
-    AWS_DEFAULT_ACL = config("AWS_DEFAULT_ACL")
-    AWS_S3_VERITY = config("AWS_S3_VERITY")
-    DEFAULT_FILE_STORAGE = config("DEFAULT_FILE_STORAGE")
-    STATICFILES_STORAGE = config("STATICFILES_STORAGE")
-else:
-    STATIC_URL = "/staticfiles/"
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = "/staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
@@ -184,4 +168,3 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",  # URL Angular
     "http://localhost:4200",  # Une autre URL Angular
 ]
-
